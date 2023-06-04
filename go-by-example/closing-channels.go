@@ -27,5 +27,4 @@ func main() {
 	fmt.Println("sent all jobs")
 
 	<-done
-
 }
