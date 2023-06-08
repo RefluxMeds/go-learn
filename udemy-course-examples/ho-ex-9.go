@@ -1,19 +1,13 @@
 package main
 
-import (
-	"fmt"
+import "fmt"
 
-	"github.com/GoesToEleven/puppy"
-)
+var i int = 5
+
+const j = "hello"
 
 func main() {
-	s1 := puppy.Bark()
-	s2 := puppy.Barks()
+	k := true
 
-	s3 := puppy.BigBark()
-	s4 := puppy.BigBarks()
-
-	fmt.Println(s1, s2)
-	fmt.Println(s3)
-	fmt.Println(s4)
+	fmt.Printf("%v is type %T\n%v is type %T\n%v is type %T\n", i, i, j, j, k, k)
 }
