@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
+	"sync"
 )
+
+var wg sync.WaitGroup
 
 func main() {
 	links := []string{
@@ -16,32 +18,24 @@ func main() {
 		"http://amazon.com",
 	}
 
-	c := make(chan string)
-
 	for _, link := range links {
-		go checkLink(link, c)
+		wg.Add(1)
+		go checkLink(link)
 	}
 
-	for l := range c {
-		go func(s string) {
-			time.Sleep(5 * time.Second)
-			checkLink(s, c)
-		}(l)
-	}
+	wg.Wait()
 }
 
-func checkLink(link string, c chan string) {
-	time.Sleep(time.Second)
+func checkLink(link string) {
 	resp, err := http.Get(link)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	if resp.StatusCode > 299 {
 		fmt.Println("The page", link, "reponse failed with status code:", resp.StatusCode)
 	} else {
 		fmt.Println(link, "status code is", resp.StatusCode)
 	}
 
-	c <- link
+	if err != nil {
+		log.Fatal(err)
+	}
+	wg.Done()
 }
